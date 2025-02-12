@@ -3,7 +3,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let contract;
     const contractAddress = '0x7067605230d5d131BDD073982eFC698a4766FFA5';
     const contractABI = [
-        // ABI content
+        // Correct ABI entries
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "account",
+                    "type": "address"
+                }
+            ],
+            "name": "getAccountBalance",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        // Other ABI entries
     ];
 
     async function connect() {
@@ -28,52 +48,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function depositFunds() {
-        const accounts = await web3.eth.getAccounts();
-        const amount = web3.utils.toWei(document.getElementById('depositAmount').value, 'ether');
-        await contract.methods.depositFunds().send({ from: accounts[0], value: amount });
-    }
-
-    async function withdrawFunds() {
-        const accounts = await web3.eth.getAccounts();
-        const amount = web3.utils.toWei(document.getElementById('withdrawAmount').value, 'ether');
-        await contract.methods.withdrawFunds(amount).send({ from: accounts[0] });
-    }
-
-    async function withdrawApprovedFunds() {
-        const accounts = await web3.eth.getAccounts();
-        const owner = document.getElementById('withdrawApprovedOwner').value;
-        const amount = web3.utils.toWei(document.getElementById('withdrawApprovedAmount').value, 'ether');
-        await contract.methods.withdrawApprovedFunds(owner, amount).send({ from: accounts[0] });
-    }
-
-    async function approvePayment() {
-        const accounts = await web3.eth.getAccounts();
-        const amount = web3.utils.toWei(document.getElementById('approveAmount').value, 'ether');
-        await contract.methods.approvePayment(amount).send({ from: accounts[0] });
-    }
-
-    async function approveWithdrawal() {
-        const accounts = await web3.eth.getAccounts();
-        const spender = document.getElementById('approveSpender').value;
-        const amount = web3.utils.toWei(document.getElementById('approveWithdrawalAmount').value, 'ether');
-        await contract.methods.approveWithdrawal(spender, amount).send({ from: accounts[0] });
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const amount = web3.utils.toWei(document.getElementById('depositAmount').value, 'ether');
+            await contract.methods.depositFunds().send({ from: accounts[0], value: amount });
+            console.log('Deposit successful');
+        } catch (error) {
+            console.error('Error depositing funds:', error);
+        }
     }
 
     async function getAccountBalance() {
-        const accountAddress = document.getElementById('accountAddress').value;
         try {
+            const accountAddress = document.getElementById('accountAddress').value;
             const balance = await contract.methods.getAccountBalance(accountAddress).call();
             document.getElementById('accountBalance').innerText = `Balance: ${web3.utils.fromWei(balance, 'ether')} ETH`;
+            console.log('Get account balance successful');
         } catch (error) {
-            console.error(error);
+            console.error('Error getting account balance:', error);
         }
     }
 
     document.getElementById('connectButton').addEventListener('click', connect);
     document.getElementById('depositButton').addEventListener('click', depositFunds);
-    document.getElementById('withdrawButton').addEventListener('click', withdrawFunds);
-    document.getElementById('withdrawApprovedFundsButton').addEventListener('click', withdrawApprovedFunds);
-    document.getElementById('approvePaymentButton').addEventListener('click', approvePayment);
-    document.getElementById('approveWithdrawalButton').addEventListener('click', approveWithdrawal);
     document.getElementById('getBalanceButton').addEventListener('click', getAccountBalance);
 });
