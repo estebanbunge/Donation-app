@@ -3,35 +3,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let contract;
     const contractAddress = '0x7067605230d5d131BDD073982eFC698a4766FFA5';
     const contractABI = [
-        {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Approval","type":"event"},
-        {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ApprovalForWithdrawal","type":"event"},
-        {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Deposit","type":"event"},
-        {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Withdrawal","type":"event"},
-        {"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"accountAddresses","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"approvePayment","outputs":[],"stateMutability":"nonpayable","type":"function"},
-        {"inputs":[{"internalType":"address","name":"_spender","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"approveWithdrawal","outputs":[],"stateMutability":"nonpayable","type":"function"},
-        {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"approvedAmounts","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"approvedWithdrawals","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[],"name":"depositFunds","outputs":[],"stateMutability":"payable","type":"function"},
-        {"inputs":[{"internalType":"uint256","name":"index","type":"uint256"}],"name":"getAccountAddress","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"getAccountBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[],"name":"getAccountCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getApprovedAmount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-        {"inputs":[{"internalType":"address","name":"_owner","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdrawApprovedFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},
-        {"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdrawFunds","outputs":[],"stateMutability":"nonpayable","type":"function"}
+        // ABI content
     ];
 
     async function connect() {
-        if (window.ethereum) {
-            web3 = new Web3(window.ethereum);
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (typeof window.ethereum !== 'undefined') {
+            try {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                web3 = new Web3(window.ethereum);
+                contract = new web3.eth.Contract(contractABI, contractAddress);
+                const accounts = await web3.eth.getAccounts();
+                document.getElementById('account').innerText = `Connected account: ${accounts[0]}`;
+            } catch (error) {
+                console.error('User denied account access or there was an error:', error);
+            }
+        } else if (typeof window.web3 !== 'undefined') {
+            web3 = new Web3(window.web3.currentProvider);
             contract = new web3.eth.Contract(contractABI, contractAddress);
             const accounts = await web3.eth.getAccounts();
             document.getElementById('account').innerText = `Connected account: ${accounts[0]}`;
         } else {
-            alert('MetaMask is not installed!');
+            alert('MetaMask is not installed! Please install it to use this application.');
         }
     }
 
@@ -77,42 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    async function getAccountAddress(index) {
-        try {
-            const address = await contract.methods.getAccountAddress(index).call();
-            console.log(`Account Address at index ${index}: ${address}`);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getAccountCount() {
-        try {
-            const count = await contract.methods.getAccountCount().call();
-            console.log(`Total Account Count: ${count}`);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getApprovedAmount(userAddress) {
-        try {
-            const amount = await contract.methods.getApprovedAmount(userAddress).call();
-            console.log(`Approved Amount for ${userAddress}: ${web3.utils.fromWei(amount, 'ether')} ETH`);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async function getBalance(userAddress) {
-        try {
-            const balance = await contract.methods.getBalance(userAddress).call();
-            console.log(`Balance for ${userAddress}: ${web3.utils.fromWei(balance, 'ether')} ETH`);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     document.getElementById('connectButton').addEventListener('click', connect);
     document.getElementById('depositButton').addEventListener('click', depositFunds);
     document.getElementById('withdrawButton').addEventListener('click', withdrawFunds);
@@ -121,3 +77,5 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('approveWithdrawalButton').addEventListener('click', approveWithdrawal);
     document.getElementById('getBalanceButton').addEventListener('click', getAccountBalance);
 });
+
+
