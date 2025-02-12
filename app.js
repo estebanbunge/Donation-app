@@ -3,7 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let contract;
     const contractAddress = '0x7067605230d5d131BDD073982eFC698a4766FFA5';
     const contractABI = [
-        // Correct ABI entries
+        {
+            "constant": false,
+            "inputs": [],
+            "name": "depositFunds",
+            "outputs": [],
+            "payable": true,
+            "stateMutability": "payable",
+            "type": "function"
+        },
         {
             "constant": true,
             "inputs": [
@@ -23,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "stateMutability": "view",
             "type": "function"
         },
-        // Other ABI entries
+        // Add other ABI entries here
     ];
 
     async function connect() {
@@ -61,9 +69,10 @@ document.addEventListener('DOMContentLoaded', function() {
     async function getAccountBalance() {
         try {
             const accountAddress = document.getElementById('accountAddress').value;
+            console.log('Getting balance for:', accountAddress);
             const balance = await contract.methods.getAccountBalance(accountAddress).call();
             document.getElementById('accountBalance').innerText = `Balance: ${web3.utils.fromWei(balance, 'ether')} ETH`;
-            console.log('Get account balance successful');
+            console.log('Get account balance successful:', balance);
         } catch (error) {
             console.error('Error getting account balance:', error);
         }
