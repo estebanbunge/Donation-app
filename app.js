@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ];
 
     async function connect() {
-        if (typeof window.ethereum !== 'undefined') {
+        if (window.ethereum) {
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 web3 = new Web3(window.ethereum);
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (error) {
                 console.error('User denied account access or there was an error:', error);
             }
-        } else if (typeof window.web3 !== 'undefined') {
+        } else if (window.web3) {
             web3 = new Web3(window.web3.currentProvider);
             contract = new web3.eth.Contract(contractABI, contractAddress);
             const accounts = await web3.eth.getAccounts();
@@ -77,5 +77,3 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('approveWithdrawalButton').addEventListener('click', approveWithdrawal);
     document.getElementById('getBalanceButton').addEventListener('click', getAccountBalance);
 });
-
-
