@@ -4,39 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Contract Interaction</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Smart Contract Interaction</h1>
-    <button id="connectButton">Connect to Wallet</button>
-    <div id="account"></div>
+    <div class="container">
+        <h1>Smart Contract Interaction</h1>
+        <button id="connectButton">Connect to Wallet</button>
+        <div id="account"></div>
 
-    <h2>Deposit</h2>
-    <input type="text" id="depositAmount" placeholder="Amount to deposit (ETH)">
-    <button id="depositButton">Deposit Funds</button>
+        <h2>Deposit</h2>
+        <input type="text" id="depositAmount" placeholder="Amount to deposit (ETH)">
+        <button id="depositButton">Deposit Funds</button>
 
-    <h2>Withdraw</h2>
-    <input type="text" id="withdrawAmount" placeholder="Amount to withdraw (ETH)">
-    <button id="withdrawButton">Withdraw Funds</button>
+        <h2>Withdraw</h2>
+        <input type="text" id="withdrawAmount" placeholder="Amount to withdraw (ETH)">
+        <button id="withdrawButton">Withdraw Funds</button>
 
-    <h2>Withdraw Approved Funds</h2>
-    <input type="text" id="withdrawApprovedOwner" placeholder="Owner address">
-    <input type="text" id="withdrawApprovedAmount" placeholder="Amount to withdraw (ETH)">
-    <button id="withdrawApprovedFundsButton">Withdraw Approved Funds</button>
+        <h2>Withdraw Approved Funds</h2>
+        <input type="text" id="withdrawApprovedOwner" placeholder="Owner address">
+        <input type="text" id="withdrawApprovedAmount" placeholder="Amount to withdraw (ETH)">
+        <button id="withdrawApprovedFundsButton">Withdraw Approved Funds</button>
 
-    <h2>Approve Payment</h2>
-    <input type="text" id="approveAmount" placeholder="Amount to approve (ETH)">
-    <button id="approvePaymentButton">Approve Payment</button>
+        <h2>Approve Payment</h2>
+        <input type="text" id="approveAmount" placeholder="Amount to approve (ETH)">
+        <button id="approvePaymentButton">Approve Payment</button>
 
-    <h2>Approve Withdrawal</h2>
-    <input type="text" id="approveSpender" placeholder="Spender address">
-    <input type="text" id="approveWithdrawalAmount" placeholder="Amount to approve (ETH)">
-    <button id="approveWithdrawalButton">Approve Withdrawal</button>
+        <h2>Approve Withdrawal</h2>
+        <input type="text" id="approveSpender" placeholder="Spender address">
+        <input type="text" id="approveWithdrawalAmount" placeholder="Amount to approve (ETH)">
+        <button id="approveWithdrawalButton">Approve Withdrawal</button>
 
-    <h2>Get Account Balance</h2>
-    <input type="text" id="accountAddress" placeholder="Account address">
-    <button id="getBalanceButton">Get Balance</button>
-    <div id="accountBalance"></div>
-
+        <h2>Get Account Balance</h2>
+        <input type="text" id="accountAddress" placeholder="Account address">
+        <button id="getBalanceButton">Get Balance</button>
+        <div id="accountBalance"></div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
     <script src="app.js"></script>
 </body>
