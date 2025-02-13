@@ -56,6 +56,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    async function withdrawFunds() {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const amount = web3.utils.toWei(document.getElementById('withdrawAmount').value, 'ether');
+            await contract.methods.withdrawFunds(amount).send({ from: accounts[0] });
+            console.log('Withdrawal successful');
+        } catch (error) {
+            console.error('Error withdrawing funds:', error);
+        }
+    }
+
+    async function withdrawApprovedFunds() {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const owner = document.getElementById('withdrawApprovedOwner').value;
+            const amount = web3.utils.toWei(document.getElementById('withdrawApprovedAmount').value, 'ether');
+            await contract.methods.withdrawApprovedFunds(owner, amount).send({ from: accounts[0] });
+            console.log('Approved withdrawal successful');
+        } catch (error) {
+            console.error('Error withdrawing approved funds:', error);
+        }
+    }
+
+    async function approvePayment() {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const amount = web3.utils.toWei(document.getElementById('approveAmount').value, 'ether');
+            await contract.methods.approvePayment(amount).send({ from: accounts[0] });
+            console.log('Payment approved');
+        } catch (error) {
+            console.error('Error approving payment:', error);
+        }
+    }
+
+    async function approveWithdrawal() {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const spender = document.getElementById('approveSpender').value;
+            const amount = web3.utils.toWei(document.getElementById('approveWithdrawalAmount').value, 'ether');
+            await contract.methods.approveWithdrawal(spender, amount).send({ from: accounts[0] });
+            console.log('Withdrawal approved');
+        } catch (error) {
+            console.error('Error approving withdrawal:', error);
+        }
+    }
+
     async function getAccountBalance() {
         try {
             const accountAddress = document.getElementById('accountAddress').value;
@@ -70,5 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('connectButton').addEventListener('click', connect);
     document.getElementById('depositButton').addEventListener('click', depositFunds);
+    document.getElementById('withdrawButton').addEventListener('click', withdrawFunds);
+    document.getElementById('withdrawApprovedFundsButton').addEventListener('click', withdrawApprovedFunds);
+    document.getElementById('approvePaymentButton').addEventListener('click', approvePayment);
+    document.getElementById('approveWithdrawalButton').addEventListener('click', approveWithdrawal);
     document.getElementById('getBalanceButton').addEventListener('click', getAccountBalance);
 });
